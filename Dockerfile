@@ -33,7 +33,7 @@ ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
 
 
 
-# 复制文件
+# 复制破解文件
 COPY --from=builder /opt/atlassian/agent /opt/atlassian/agent
 
 
