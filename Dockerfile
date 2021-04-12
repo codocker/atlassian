@@ -5,6 +5,7 @@ FROM ubuntu AS builder
 ENV AGENT_VERSION 1.2.3
 
 
+
 WORKDIR /opt/atlassian
 
 
