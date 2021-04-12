@@ -2,9 +2,7 @@ FROM ubuntu AS builder
 
 
 # 版本
-ENV JDBC_VERSION 8.0.23
 ENV AGENT_VERSION 1.2.3
-ENV LOG_VERSION 1.2.0
 
 
 WORKDIR /opt/atlassian
@@ -25,7 +23,7 @@ FROM storezhang/ubuntu
 
 MAINTAINER storezhang "storezhang@gmail.com"
 LABEL architecture="AMD64/x86_64" version="latest" build="2021-04-12"
-LABEL Description="Atlassian公司产品Bitbucket，用来做Git服务器。在原来的基础上增加了MySQL/MariaDB驱动以及太了解程序。"
+LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数。"
 
 
 
