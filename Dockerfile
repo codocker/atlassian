@@ -28,7 +28,7 @@ LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境�
 
 
 # 设置Java Agent
-ENV JAVA_HOME /usr/lib/jvm/java-14-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
 
 
@@ -49,7 +49,7 @@ RUN set -ex \
     \
     \
     # 安装守护进程，因为要Xvfb和Nuwa同时运行
-    && apt install -y openjdk-14-jre \
+    && apt install -y openjdk-11-jre \
     \
     \
     \
