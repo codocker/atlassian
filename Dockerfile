@@ -23,7 +23,7 @@ FROM storezhang/ubuntu
 
 
 MAINTAINER storezhang "storezhang@gmail.com"
-LABEL architecture="AMD64/x86_64" version="latest" build="2021-04-12"
+LABEL architecture="AMD64/x86_64" version="latest" build="2021-04-13"
 LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数。"
 
 
