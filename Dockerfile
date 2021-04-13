@@ -2,18 +2,18 @@ FROM ubuntu AS builder
 
 
 # 版本
-ENV AGENT_VERSION 1.2.3
+ENV JDBC_MARIADB_VERSION 8.0.23
 
 
 
-WORKDIR /opt/atlassian
+WORKDIR /opt/oracle
 
 
 
 RUN apt update && apt install -y axel
-# 安装Agent（破解程序）
-RUN axel --num-connections 64 --insecure "https://gitee.com/pengzhile/atlassian-agent/attach_files/283101/download/atlassian-agent-v${AGENT_VERSION}.tar.gz"
-RUN tar -xzvf atlassian-agent-v${AGENT_VERSION}.tar.gz && mkdir -p /opt/atlassian/agent && mv atlassian-agent-v${AGENT_VERSION}/atlassian-agent.jar /opt/atlassian/agent/agent.jar
+# 安装JDBC
+RUN axel --num-connections 64 --insecure "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MARIADB_VERSION}.tar.gz"
+RUN tar -xzvf mysql-connector-java-${JDBC_MARIADB_VERSION}.tar.gz && mkdir -p /opt/oracle/mariadb/lib && mv mysql-connector-java-${JDBC_MARIADB_VERSION}/mysql-connector-java-${JDBC_MARIADB_VERSION}.jar /opt/oracle/mariadb/lib/mysql-connector-java-${JDBC_MARIADB_VERSION}.jar
 
 
 
@@ -29,13 +29,14 @@ LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境�
 
 
 # 设置Java Agent
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-14-openjdk-amd64
 ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
 
 
 
 # 复制破解文件
-COPY --from=builder /opt/atlassian/agent /opt/atlassian/agent
+COPY --from=builder /opt/oracle/mariadb/lib /opt/oracle/mariadb/lib
+COPY docker /
 
 
 
@@ -43,14 +44,15 @@ RUN set -ex \
     \
     \
     \
-    # 安装JRE，确保可以启动应用
+    # 安装Atlassian公司全家桶的Java执行环境
     && apt update -y --fix-missing \
     && apt upgrade -y \
+    && apt install -y openjdk-14-jre \
     \
     \
     \
-    # 安装守护进程，因为要Xvfb和Nuwa同时运行
-    && apt install -y openjdk-11-jre \
+    # 增加执行权限，自定义的keygen命令，可以用来快速破解Atlassian便宜桶
+    && chmod +x /usr/bin/keygen \
     \
     \
     \
