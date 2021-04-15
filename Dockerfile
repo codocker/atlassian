@@ -37,6 +37,9 @@ ENV PROXY_SCHEME https
 ENV PROXY_DOMAIN ""
 ENV PROXY_PORT 443
 
+# 配置上下文路径
+ENV CONTEXT_PATH ""
+
 
 
 # 复制破解文件
