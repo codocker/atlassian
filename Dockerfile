@@ -32,6 +32,11 @@ LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境�
 ENV JAVA_HOME /usr/lib/jvm/java-14-openjdk-amd64
 ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
 
+# 配置反向代理
+ENV PROXY_SCHEME https
+ENV PROXY_DOMAIN ""
+ENV PROXY_PORT 443
+
 
 
 # 复制破解文件
