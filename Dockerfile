@@ -14,6 +14,7 @@ RUN apt update && apt install -y axel
 # 安装JDBC
 RUN axel --num-connections 64 --insecure "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MARIADB_VERSION}.tar.gz"
 RUN tar -xzvf mysql-connector-java-${JDBC_MARIADB_VERSION}.tar.gz && mkdir -p /opt/oracle/mariadb/lib && mv mysql-connector-java-${JDBC_MARIADB_VERSION}/mysql-connector-java-${JDBC_MARIADB_VERSION}.jar /opt/oracle/mariadb/lib/mysql-connector-java-${JDBC_MARIADB_VERSION}.jar
+RUN chown -R "${USERNAME}":"${USERNAME}" /opt/oracle/mariadb/lib
 
 
 
