@@ -28,8 +28,8 @@ LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境�
 
 
 
-# 设置Java Agent
-ENV JAVA_HOME /usr/lib/jvm/java-14-openjdk-amd64
+# 设置Atlassian Agent
+ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
 ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
 
 # 配置反向代理
@@ -39,6 +39,11 @@ ENV PROXY_PORT 443
 
 # 配置上下文路径
 ENV CONTEXT_PATH ""
+
+# Agent参数，方便调用
+ENV NAME ""
+ENV ORG ""
+ENV EMAIL ""
 
 
 
@@ -55,7 +60,7 @@ RUN set -ex \
     # 安装Atlassian公司全家桶的Java执行环境
     && apt update -y --fix-missing \
     && apt upgrade -y \
-    && apt install -y openjdk-14-jre \
+    && apt install -y openjdk-11-jre \
     \
     \
     \

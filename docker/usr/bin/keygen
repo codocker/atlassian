@@ -1,3 +1,18 @@
 #!/bin/bash
 
-java -jar /opt/atlassian/agent/agent.jar -d "$@"
+if [ -z "${ORG}" ]; then
+  echo "没有设置组织名，请使用--evn=ORG=xxx设置环境变量"
+  exit 1
+fi
+
+if [ -z "${EMAIL}" ]; then
+  echo "没有设置组邮箱，请使用--evn=EMAIL=xxx设置环境变量"
+  exit 1
+fi
+
+if [ -z "${NAME}" ]; then
+  echo "没有设置名称，请使用--evn=NAME=xxx设置环境变量"
+  exit 1
+fi
+
+java -jar /opt/atlassian/agent/agent.jar -d  -o "${ORG}" -m "${EMAIL}" -n "${NAME}" -p "$@"
