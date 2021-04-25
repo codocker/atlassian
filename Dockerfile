@@ -63,9 +63,9 @@ ENV PROXY_PORT 443
 ENV CONTEXT_PATH ""
 
 # Agent参数，方便调用
-ENV NAME ""
-ENV ORG ""
-ENV EMAIL ""
+ENV NAME "storezhang"
+ENV ORG "https://ruijc.com"
+ENV EMAIL "storezhang@gmail.com"
 
 
 
