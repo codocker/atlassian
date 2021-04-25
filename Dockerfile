@@ -67,6 +67,9 @@ ENV NAME "storezhang"
 ENV ORG "https://ruijc.com"
 ENV EMAIL "storezhang@gmail.com"
 
+# 设置主目录文件权限
+ENV SET_PERMISSIONS true
+
 
 
 # 复制破解文件
