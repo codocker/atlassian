@@ -1,8 +1,13 @@
 FROM ubuntu AS builder
 
 
-# 版本
-ENV JDBC_MARIADB_VERSION 8.0.23
+# MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
+ENV JDBC_MYSQL8_VERSION 8.0.24
+ENV JDBC_MYSQL5_VERSION 5.1.46
+
+ENV JRE_VERSION 11.0.11
+ENV JRE_MAJOR_VERSION 11
+ENV OPENJ9_VERSION 0.26.0
 
 
 
@@ -10,11 +15,27 @@ WORKDIR /opt/oracle
 
 
 
-RUN apt update && apt install -y axel
-# 安装JDBC
-RUN axel --num-connections 64 --insecure "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MARIADB_VERSION}.tar.gz"
-RUN tar -xzvf mysql-connector-java-${JDBC_MARIADB_VERSION}.tar.gz && mkdir -p /opt/oracle/mariadb/lib && mv mysql-connector-java-${JDBC_MARIADB_VERSION}/mysql-connector-java-${JDBC_MARIADB_VERSION}.jar /opt/oracle/mariadb/lib/mysql-connector-java-${JDBC_MARIADB_VERSION}.jar
-RUN chown -R "${USERNAME}":"${USERNAME}" /opt/oracle/mariadb/lib
+RUN apt update && apt install -y axel curl
+
+# 安装AdoptOpenJDK，替代Oracle JDK
+RUN axel --num-connections 6 --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
+RUN tar -xzf jre${JRE_VERSION}.tar.gz
+RUN mkdir -p /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptopenjdk-amd64
+RUN mv jdk-${JRE_VERSION}+9-jre/* /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptopenjdk-amd64
+
+# 安装MySQL驱动
+# 安装MySQL8驱动
+RUN mkdir -p /opt/oracle/mysql/lib
+RUN axel --num-connections 6 --insecure --output=mysql${JDBC_MYSQL8_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL8_VERSION}.tar.gz"
+RUN tar -xzf mysql${JDBC_MYSQL8_VERSION}.tar.gz
+RUN mv mysql-connector-java-${JDBC_MYSQL8_VERSION}/mysql-connector-java-${JDBC_MYSQL8_VERSION}.jar /opt/oracle/mysql/lib/mysql-connector-java-${JDBC_MYSQL8_VERSION}.jar
+
+# 安装MySQL5驱动
+RUN axel --num-connections 6 --insecure --output=mysql${JDBC_MYSQL5_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL5_VERSION}.tar.gz"
+RUN tar -xzf mysql${JDBC_MYSQL5_VERSION}.tar.gz
+RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_MYSQL5_VERSION}.jar /opt/oracle/mysql/lib/mysql-connector-java-${JDBC_MYSQL5_VERSION}.jar
+
+
 
 
 
@@ -30,7 +51,7 @@ LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境�
 
 
 # 设置Atlassian Agent
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-11-adoptopenjdk-amd64
 ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
 
 # 配置反向代理
@@ -49,19 +70,13 @@ ENV EMAIL ""
 
 
 # 复制破解文件
-COPY --from=builder /opt/oracle/mariadb/lib /opt/oracle/mariadb/lib
+COPY --from=builder /opt/oracle/mysql/lib /opt/oracle/mysql/lib
+COPY --from=builder /usr/lib/jvm /usr/lib/jvm
 COPY docker /
 
 
 
 RUN set -ex \
-    \
-    \
-    \
-    # 安装Atlassian公司全家桶的Java执行环境
-    && apt update -y --fix-missing \
-    && apt upgrade -y \
-    && apt install -y openjdk-11-jre \
     \
     \
     \
