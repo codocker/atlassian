@@ -70,6 +70,14 @@ ENV EMAIL "storezhang@gmail.com"
 # 设置主目录文件权限
 ENV SET_PERMISSIONS true
 
+# 数据库连接配置
+ENV DB_TYPE mysql8
+ENV DB_HOST ""
+ENV DB_PORT 3306
+ENV DB_USER ""
+ENV DB_PASSWORD ""
+ENV DB_NAME ""
+
 
 
 # 复制破解文件
