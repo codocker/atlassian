@@ -74,9 +74,9 @@ ENV SET_PERMISSIONS true
 ENV DB_TYPE mysql8
 ENV DB_HOST "localhost"
 ENV DB_PORT 3306
+ENV DB_NAME "jira"
 ENV DB_USER "jira"
 ENV DB_PASSWORD "jira"
-ENV DB_NAME "jira"
 
 
 
