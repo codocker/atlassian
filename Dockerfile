@@ -72,11 +72,11 @@ ENV SET_PERMISSIONS true
 
 # 数据库连接配置
 ENV DB_TYPE mysql8
-ENV DB_HOST ""
+ENV DB_HOST "localhost"
 ENV DB_PORT 3306
-ENV DB_USER ""
-ENV DB_PASSWORD ""
-ENV DB_NAME ""
+ENV DB_USER "jira"
+ENV DB_PASSWORD "jira"
+ENV DB_NAME "jira"
 
 
 
