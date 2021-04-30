@@ -43,40 +43,9 @@ RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_M
 # 打包真正的镜像
 FROM storezhang/ubuntu
 
-
 MAINTAINER storezhang "storezhang@gmail.com"
 LABEL architecture="AMD64/x86_64" version="latest" build="2021-04-27"
 LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数。"
-
-
-
-# 设置Atlassian Agent
-ENV JAVA_HOME /usr/lib/jvm/java-11-adoptopenjdk-amd64
-ENV JAVA_OPTS -javaagent:/opt/atlassian/agent/agent.jar
-
-# 配置反向代理
-ENV PROXY_SCHEME https
-ENV PROXY_DOMAIN ""
-ENV PROXY_PORT 443
-
-# 配置上下文路径
-ENV CONTEXT_PATH ""
-
-# Agent参数，方便调用
-ENV NAME "storezhang"
-ENV ORG "https://ruijc.com"
-ENV EMAIL "storezhang@gmail.com"
-
-# 设置主目录文件权限
-ENV SET_PERMISSIONS true
-
-# 数据库连接配置
-ENV DB_TYPE mysql8
-ENV DB_HOST "localhost"
-ENV DB_PORT 3306
-ENV DB_NAME "jira"
-ENV DB_USER "jira"
-ENV DB_PASSWORD "jira"
 
 
 
@@ -99,3 +68,34 @@ RUN set -ex \
     # 清理镜像，减少无用包
     && rm -rf /var/lib/apt/lists/* \
     && apt autoclean
+
+
+
+
+# 设置Java安装目录
+ENV JAVA_HOME /usr/lib/jvm/java-11-adoptopenjdk-amd64
+ENV JAVA_OPTS ""
+
+# 配置反向代理
+ENV PROXY_SCHEME http
+ENV PROXY_DOMAIN ""
+ENV PROXY_PORT 80
+
+# 配置上下文路径
+ENV CONTEXT_PATH ""
+
+# Agent参数，方便调用
+ENV NAME "storezhang"
+ENV ORG "https://ruijc.com"
+ENV EMAIL "storezhang@gmail.com"
+
+# 设置主目录文件权限
+ENV SET_PERMISSIONS true
+
+# 数据库连接配置
+ENV DB_TYPE mysql8
+ENV DB_HOST "localhost"
+ENV DB_PORT 3306
+ENV DB_NAME "atlassian"
+ENV DB_USER "atlassian"
+ENV DB_PASSWORD "atlassian"
