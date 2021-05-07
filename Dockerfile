@@ -60,6 +60,13 @@ RUN set -ex \
     \
     \
     \
+    # 安装缺失字体
+    && apt update -y \
+    && apt upgrade -y \
+    && apt install -y fontconfig \
+    \
+    \
+    \
     # 增加执行权限，自定义的keygen命令，可以用来快速破解Atlassian便宜桶
     && chmod +x /usr/bin/keygen \
     \
