@@ -44,8 +44,8 @@ RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_M
 FROM storezhang/ubuntu
 
 MAINTAINER storezhang "storezhang@gmail.com"
-LABEL architecture="AMD64/x86_64" version="latest" build="2021-04-27"
-LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数。"
+LABEL architecture="AMD64/x86_64" version="latest" build="2021-06-28"
+LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数"
 
 
 
