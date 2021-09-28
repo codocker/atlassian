@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/docker-atlassian.iml" filepath="$PROJECT_DIR$/.idea/docker-atlassian.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../docker-bitbucket/.idea/docker-bitbucket.iml" filepath="$PROJECT_DIR$/../docker-bitbucket/.idea/docker-bitbucket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../docker-jira/.idea/docker-jira.iml" filepath="$PROJECT_DIR$/../docker-jira/.idea/docker-jira.iml" />
     </modules>
   </component>
 </project>
