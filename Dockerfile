@@ -42,10 +42,10 @@ RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_M
 
 
 # 打包真正的镜像
-FROM storezhang/alpine
+FROM storezhang/ubuntu
 
 MAINTAINER storezhang "storezhang@gmail.com"
-LABEL architecture="AMD64/x86_64" version="latest" build="2021-10-23"
+LABEL architecture="AMD64/x86_64" version="latest" build="2021-10-22"
 LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数"
 
 
@@ -62,13 +62,9 @@ RUN set -ex \
     \
     \
     # 安装缺失字体
-    && apk update \
-    && apk --no-cache add fontconfig \
-    \
-    \
-    \
-    # 安装CURL，供健康检查调用
-    && apk --no-cache add curl \
+    && apt update -y \
+    && apt upgrade -y \
+    && apt install fontconfig -y \
     \
     \
     \
@@ -78,7 +74,8 @@ RUN set -ex \
     \
     \
     # 清理镜像，减少无用包
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/* \
+    && apt autoclean
 
 
 
@@ -110,3 +107,8 @@ ENV DB_PORT 3306
 ENV DB_NAME "atlassian"
 ENV DB_USER "atlassian"
 ENV DB_PASSWORD "atlassian"
+
+
+
+# 健康检查
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=1m CMD curl --include --fail ${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT} || exit 1
