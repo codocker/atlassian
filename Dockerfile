@@ -15,7 +15,7 @@ WORKDIR /opt/oracle
 
 
 
-RUN apk update && apt add axel
+RUN apk update && apk add axel
 
 # 安装AdoptOpenJDK，替代Oracle JDK
 RUN axel --num-connections 6 --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
@@ -61,9 +61,8 @@ RUN set -ex \
     \
     \
     # 安装缺失字体
-    && apt update -y \
-    && apt upgrade -y \
-    && apt install -y fontconfig \
+    && apk update \
+    && apk install -y fontconfig \
     \
     \
     \
@@ -78,8 +77,7 @@ RUN set -ex \
     \
     \
     # 清理镜像，减少无用包
-    && rm -rf /var/lib/apt/lists/* \
-    && apt autoclean
+    && rm -rf /var/cache/apk/*
 
 
 
