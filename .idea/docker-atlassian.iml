@@ -7,5 +7,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="docker-bitbucket" />
     <orderEntry type="module" module-name="docker-jira" />
+    <orderEntry type="module" module-name="docker-alpine" />
   </component>
 </module>

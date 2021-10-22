@@ -1,4 +1,4 @@
-FROM ubuntu AS builder
+FROM storezhang/alpine AS builder
 
 
 # MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
@@ -15,7 +15,7 @@ WORKDIR /opt/oracle
 
 
 
-RUN apt update && apt install -y axel
+RUN apk update && apt add axel
 
 # 安装AdoptOpenJDK，替代Oracle JDK
 RUN axel --num-connections 6 --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
@@ -41,7 +41,7 @@ RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_M
 
 
 # 打包真正的镜像
-FROM storezhang/ubuntu
+FROM storezhang/alpine
 
 MAINTAINER storezhang "storezhang@gmail.com"
 LABEL architecture="AMD64/x86_64" version="latest" build="2021-06-28"
@@ -90,7 +90,7 @@ ENV JAVA_OPTS ""
 
 # 配置反向代理
 ENV PROXY_SCHEME http
-ENV PROXY_DOMAIN ""
+ENV PROXY_DOMAIN "127.0.0.1"
 ENV PROXY_PORT 80
 
 # 配置上下文路径
@@ -111,3 +111,8 @@ ENV DB_PORT 3306
 ENV DB_NAME "atlassian"
 ENV DB_USER "atlassian"
 ENV DB_PASSWORD "atlassian"
+
+
+
+# 健康检查
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=${DELAY} CMD curl --include --fail --silent ${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT} || exit 1
