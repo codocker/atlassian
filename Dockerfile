@@ -1,4 +1,4 @@
-FROM storezhang/alpine AS builder
+FROM ubuntu AS builder
 
 
 # MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
@@ -15,8 +15,8 @@ WORKDIR /opt/oracle
 
 
 
-RUN apk update
-RUN apk add axel
+RUN apt update -y
+RUN apt install axel -y
 
 # 安装AdoptOpenJDK，替代Oracle JDK
 RUN axel --num-connections 6 --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
