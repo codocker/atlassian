@@ -62,12 +62,12 @@ RUN set -ex \
     \
     # 安装缺失字体
     && apk update \
-    && apk install -y fontconfig \
+    && apk --no-cache add fontconfig \
     \
     \
     \
     # 安装CURL，供健康检查调用
-    && apt install -y curl \
+    && apk --no-cache add curl \
     \
     \
     \
