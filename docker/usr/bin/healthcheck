@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# 健康检查
-URL="${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT}"
-echo "健康检查地址：${URL}"
-curl --include --fail "${URL}" || exit 1
