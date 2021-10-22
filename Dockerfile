@@ -67,11 +67,6 @@ RUN set -ex \
     \
     \
     \
-    # 安装CURL，供健康检查调用
-    && apk --no-cache add curl \
-    \
-    \
-    \
     # 增加执行权限，自定义的keygen命令，可以用来快速破解Atlassian便宜桶
     && chmod +x /usr/bin/keygen \
     \
@@ -110,8 +105,3 @@ ENV DB_PORT 3306
 ENV DB_NAME "atlassian"
 ENV DB_USER "atlassian"
 ENV DB_PASSWORD "atlassian"
-
-
-
-# 健康检查
-HEALTHCHECK --interval=15s --timeout=5s --retries=3 CMD sh /usr/bin/healthcheck || { echo "健康失败" ; exit 1 }
