@@ -83,6 +83,8 @@ RUN set -ex \
 
 
 
+# 延迟启动
+ENV DELAY 1m
 
 # 设置Java安装目录
 ENV JAVA_HOME /usr/lib/jvm/java-11-adoptopenjdk-amd64
@@ -115,4 +117,4 @@ ENV DB_PASSWORD "atlassian"
 
 
 # 健康检查
-HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period="${DELAY}" CMD curl --include --fail --silent ${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT} || exit 1
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 --start-period=${DELAY} CMD curl --include --fail --silent ${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT} || exit 1
