@@ -115,4 +115,4 @@ ENV DB_PASSWORD "atlassian"
 
 
 # 健康检查
-HEALTHCHECK --interval=15s --timeout=5s --retries=3 CMD curl --include --fail ${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT} || {echo "健康失败" ; exit 1}
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 CMD sh /usr/bin/healthcheck || { echo "健康失败" ; exit 1 }
