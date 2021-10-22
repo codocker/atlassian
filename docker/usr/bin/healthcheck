@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# 健康检查
+curl --include --fail --silent "${PROXY_SCHEME}://${PROXY_DOMAIN}:${PROXY_PORT}" || exit 1

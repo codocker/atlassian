@@ -74,6 +74,7 @@ RUN set -ex \
     \
     # 增加执行权限，自定义的keygen命令，可以用来快速破解Atlassian便宜桶
     && chmod +x /usr/bin/keygen \
+    && chmod +x /usr/bin/healthcheck \
     \
     \
     \
@@ -114,4 +115,4 @@ ENV DB_PASSWORD "atlassian"
 
 
 # 健康检查
-HEALTHCHECK --interval=15s --timeout=5s --retries=3 CMD curl --include --fail --silent $$PROXY_SCHEME://$$PROXY_DOMAIN:$$PROXY_PORT || exit 1
+HEALTHCHECK --interval=15s --timeout=5s --retries=3 CMD /usr/bin/healthcheck || exit 1
