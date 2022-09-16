@@ -1,4 +1,4 @@
-FROM ubuntu AS builder
+FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10 AS builder
 
 
 # MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
@@ -42,11 +42,14 @@ RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_M
 
 
 # 打包真正的镜像
-FROM storezhang/ubuntu
+FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10
 
-MAINTAINER storezhang "storezhang@gmail.com"
-LABEL architecture="AMD64/x86_64" version="latest" build="2021-10-23"
-LABEL Description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数"
+
+LABEL author="storezhang<华寅>" 
+LABEL email="storezhang@gmail.com" 
+LABEL qq="160290688" 
+LABEL wechat="storezhang"
+LABEL description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数"
 
 
 
