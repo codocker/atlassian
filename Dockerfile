@@ -15,8 +15,8 @@ WORKDIR /opt/oracle
 
 
 
-RUN apt update -y
 RUN echo "test"
+RUN apt update -y
 RUN apt install curl -y
 
 # 安装AdoptOpenJDK，替代Oracle JDK
