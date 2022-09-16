@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10.2 AS builder
+FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10.3 AS builder
 
 
 # MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
@@ -42,7 +42,7 @@ RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_M
 
 
 # 打包真正的镜像
-FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10.2
+FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10.3
 
 
 LABEL author="storezhang<华寅>" 
