@@ -1,4 +1,4 @@
-FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10 AS builder
+FROM storezhang/ubuntu:22.10 AS builder
 
 
 # MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
@@ -15,12 +15,11 @@ WORKDIR /opt/oracle
 
 
 
-RUN echo "test"
 RUN apt update -y
-RUN apt install curl -y
+RUN apt install axel -y
 
 # 安装AdoptOpenJDK，替代Oracle JDK
-RUN curl --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
+RUN axel --num-connections 6 --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
 RUN tar -xzf jre${JRE_VERSION}.tar.gz
 RUN mkdir -p /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptopenjdk-amd64
 RUN mv jdk-${JRE_VERSION}+9-jre/* /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptopenjdk-amd64
@@ -28,12 +27,12 @@ RUN mv jdk-${JRE_VERSION}+9-jre/* /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptop
 # 安装MySQL驱动
 # 安装MySQL8驱动
 RUN mkdir -p /opt/oracle/mysql/lib
-RUN curl --insecure --output=mysql${JDBC_MYSQL8_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL8_VERSION}.tar.gz"
+RUN axel --num-connections 6 --insecure --output=mysql${JDBC_MYSQL8_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL8_VERSION}.tar.gz"
 RUN tar -xzf mysql${JDBC_MYSQL8_VERSION}.tar.gz
 RUN mv mysql-connector-java-${JDBC_MYSQL8_VERSION}/mysql-connector-java-${JDBC_MYSQL8_VERSION}.jar /opt/oracle/mysql/lib/mysql-connector-java-${JDBC_MYSQL8_VERSION}.jar
 
 # 安装MySQL5驱动
-RUN curl --insecure --output=mysql${JDBC_MYSQL5_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL5_VERSION}.tar.gz"
+RUN axel --num-connections 6 --insecure --output=mysql${JDBC_MYSQL5_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL5_VERSION}.tar.gz"
 RUN tar -xzf mysql${JDBC_MYSQL5_VERSION}.tar.gz
 RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_MYSQL5_VERSION}.jar /opt/oracle/mysql/lib/mysql-connector-java-${JDBC_MYSQL5_VERSION}.jar
 
