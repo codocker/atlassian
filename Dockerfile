@@ -32,6 +32,8 @@ RUN set -ex \
     && apt update -y \
     && apt upgrade -y \
     && apt install fontconfig -y \
+    # 安装日志分割器
+    && apt install cronolog -y \
     \
     \
     \
