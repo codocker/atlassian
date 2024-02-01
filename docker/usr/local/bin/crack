@@ -15,4 +15,4 @@ if [ -z "${NAME}" ]; then
   exit 1
 fi
 
-"${JAVA_HOME}"/bin/java -jar /opt/atlassian/agent/agent.jar -d -o "${ORG}" -m "${EMAIL}" -n "${NAME}" -p "$@"
+"${JAVA_HOME}"/bin/java -jar /opt/atlassian/agent/atlassian-agent.jar -d -o "${ORG}" -m "${EMAIL}" -n "${NAME}" -p "$@"

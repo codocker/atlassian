@@ -1,63 +1,27 @@
-FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10.3 AS builder
+FROM haxqer/jira:9.12.2 AS jira
+FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:23.04.17 AS builder
 
-
-# MySQL驱动版本，之所以需要两个，是因为MySQL8之后的SSLException的Bug
-ENV JDBC_MYSQL8_VERSION 8.0.24
-ENV JDBC_MYSQL5_VERSION 5.1.46
-
-ENV JRE_VERSION 11.0.11
-ENV JRE_MAJOR_VERSION 11
-ENV OPENJ9_VERSION 0.26.0
-
-
-
-WORKDIR /opt/oracle
-
-
-
-RUN apt update -y
-RUN apt install axel -y
-
-# 安装AdoptOpenJDK，替代Oracle JDK
-RUN axel --num-connections 6 --output jre${JRE_VERSION}.tar.gz --insecure "https://download.fastgit.org/AdoptOpenJDK/openjdk${JRE_MAJOR_VERSION}-binaries/releases/download/jdk-${JRE_VERSION}+9_openj9-${OPENJ9_VERSION}/OpenJDK${JRE_MAJOR_VERSION}U-jre_x64_linux_openj9_${JRE_VERSION}_9_openj9-${OPENJ9_VERSION}.tar.gz"
-RUN tar -xzf jre${JRE_VERSION}.tar.gz
-RUN mkdir -p /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptopenjdk-amd64
-RUN mv jdk-${JRE_VERSION}+9-jre/* /usr/lib/jvm/java-${JRE_MAJOR_VERSION}-adoptopenjdk-amd64
-
-# 安装MySQL驱动
-# 安装MySQL8驱动
-RUN mkdir -p /opt/oracle/mysql/lib
-RUN axel --num-connections 6 --insecure --output=mysql${JDBC_MYSQL8_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL8_VERSION}.tar.gz"
-RUN tar -xzf mysql${JDBC_MYSQL8_VERSION}.tar.gz
-RUN mv mysql-connector-java-${JDBC_MYSQL8_VERSION}/mysql-connector-java-${JDBC_MYSQL8_VERSION}.jar /opt/oracle/mysql/lib/mysql-connector-java-${JDBC_MYSQL8_VERSION}.jar
-
-# 安装MySQL5驱动
-RUN axel --num-connections 6 --insecure --output=mysql${JDBC_MYSQL5_VERSION}.tar.gz "https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-${JDBC_MYSQL5_VERSION}.tar.gz"
-RUN tar -xzf mysql${JDBC_MYSQL5_VERSION}.tar.gz
-RUN mv mysql-connector-java-${JDBC_MYSQL5_VERSION}/mysql-connector-java-${JDBC_MYSQL5_VERSION}.jar /opt/oracle/mysql/lib/mysql-connector-java-${JDBC_MYSQL5_VERSION}.jar
-
-
-
+# 复制所需要的文件
+COPY --from=jira /var/agent /docker/opt/atlassian/agent
+COPY --from=jira /usr/local/openjdk-11 /docker/opt/oracle/openjdk
+# ! 必须在最后一步复制需要做出修改的文件，不然文件内容会被覆盖
+COPY docker /docker
 
 
 
 # 打包真正的镜像
-FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:22.10.3
+FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:23.04.17
 
 
-LABEL author="storezhang<华寅>" 
-LABEL email="storezhang@gmail.com" 
-LABEL qq="160290688" 
-LABEL wechat="storezhang"
-LABEL description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数"
+LABEL author="storezhang<华寅>" \
+    email="storezhang@gmail.com" \
+    qq="160290688" \
+    wechat="storezhang" \
+    description="Atlassian公司产品基础镜像，安装了JRE执行环境以及Agent破解程序，并设置Agent执行参数"
 
 
-
-# 复制破解文件
-COPY --from=builder /opt/oracle/mysql/lib /opt/oracle/mysql/lib
-COPY --from=builder /usr/lib/jvm /usr/lib/jvm
-COPY docker /
-
+# 复制文件
+COPY --from=builder /docker /
 
 
 RUN set -ex \
@@ -71,13 +35,10 @@ RUN set -ex \
     \
     \
     \
-    # 安装CURL，供健康检查调用
+    # 安装健康检查依赖命令
     && apt install curl -y \
-    \
-    \
-    \
-    # 增加执行权限，自定义的keygen命令，可以用来快速破解Atlassian便宜桶
-    && chmod +x /usr/bin/keygen \
+    # 增加破解命令 \
+    && chmod +x /usr/local/bin/crach \
     \
     \
     \
@@ -86,11 +47,10 @@ RUN set -ex \
     && apt autoclean
 
 
-
-
-# 设置Java安装目录
-ENV JAVA_HOME /usr/lib/jvm/java-11-adoptopenjdk-amd64
-ENV JAVA_OPTS ""
+# 配置运行时环境变量
+ENV JAVA_HOME /opt/oracle/openjdk
+# 设置破解程序
+ENV JAVA_OPTS "-javaagent:/opt/atlassian/agent/atlassian-agent.jar -Djira.downgrade.allowed=true ${JAVA_OPTS}"
 
 # 配置反向代理
 ENV PROXY_SCHEME http
@@ -118,7 +78,6 @@ ENV DB_PASSWORD "atlassian"
 
 # 日志清理
 ENV LOG_EXPIRED_DAYS 30
-
 
 
 # 健康检查
