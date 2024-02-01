@@ -28,6 +28,7 @@ RUN set -ex \
     \
     \
     \
+    && sed -i 's/mirrors.ustc.edu.cn/mirrors.aliyun.com/g' /etc/apt/sources.list \
     # 安装缺失字体
     && apt update -y \
     && apt upgrade -y \
@@ -53,6 +54,11 @@ RUN set -ex \
 ENV JAVA_HOME /opt/oracle/openjdk
 # 设置破解程序
 ENV JAVA_OPTS "-javaagent:/opt/atlassian/agent/atlassian-agent.jar -Djira.downgrade.allowed=true ${JAVA_OPTS}"
+ENV ATLASSIAN_HOME /config
+ENV CATALINA_TMPDIR ${ATLASSIAN_HOME}/tmp
+ENV CATALINA_OUT ${ATLASSIAN_HOME}/log/catalina.out
+ENV CATALINA_OUT_CMD "cronolog ${ATLASSIAN_HOME}/log/catalina.%Y-%m-%d.out"
+ENV CATALINA_OPTS ""
 
 # 配置反向代理
 ENV PROXY_SCHEME http
