@@ -38,7 +38,7 @@ RUN set -ex \
     # 安装健康检查依赖命令
     && apt install curl -y \
     # 增加破解命令 \
-    && chmod +x /usr/local/bin/crach \
+    && chmod +x /usr/local/bin/crack \
     \
     \
     \
