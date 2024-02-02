@@ -53,7 +53,8 @@ RUN set -ex \
 # 配置运行时环境变量
 ENV JAVA_HOME /opt/oracle/openjdk
 # 设置破解程序
-ENV JAVA_OPTS "-javaagent:/opt/atlassian/agent/atlassian-agent.jar -Djira.downgrade.allowed=true ${JAVA_OPTS}"
+ENV LIB_PATH "/opt/atlassian/atlassian-jira/WEB-INF/lib/"
+ENV JAVA_OPTS "-javaagent:/opt/atlassian/agent/atlassian-agent.jar=${LIB_PATH} -Djira.downgrade.allowed=true ${JAVA_OPTS}"
 ENV ATLASSIAN_HOME /config
 ENV CATALINA_TMPDIR ${ATLASSIAN_HOME}/tmp
 ENV CATALINA_OUT ${ATLASSIAN_HOME}/log/catalina.out
