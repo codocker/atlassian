@@ -86,7 +86,7 @@ ENV DB_USER "atlassian"
 ENV DB_PASSWORD "atlassian"
 
 # 日志清理
-ENV LOG_EXPIRED_DAYS 30
+ENV LOG_EXPIRED_DAYS 3
 
 
 # 健康检查
