@@ -1,4 +1,4 @@
-FROM haxqer/jira:9.14.1 AS jira
+FROM haxqer/jira:9.17.0 AS jira
 FROM ccr.ccs.tencentyun.com/storezhang/ubuntu:23.04.17 AS builder
 
 # 复制所需要的文件
